@@ -206,9 +206,7 @@ const ProductDetails = () => {
 
         {/* Price Section */}
         <div className="mt-3 text-xl">
-          <span className="text-gray-500 line-through mr-2">
-            {product.oldPrice}
-          </span>
+          
           <span className="text-gray-600 font-bold">{product.price}</span>
         </div>
 
