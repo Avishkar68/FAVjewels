@@ -206,9 +206,16 @@ export default function Navbar() {
     formData.append("price", price);
 
     try {
-      const response = await axios.post("http://localhost:5000/upload", formData, {
+      console.log("Sending FormData:", [...formData]); // Debugging line
+      console.log("Uploading image...");
+
+      const response = await axios.post("http://localhost:5000/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
-      });
+    });
+
+    const imageUrl = response.data.imageUrl;
+    console.log("Image uploaded:", imageUrl);
+
 
       alert("Product uploaded successfully!");
       console.log(response.data);
