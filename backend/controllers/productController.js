@@ -1,6 +1,6 @@
 const Product = require("../models/Product");
 const multer = require("multer");
-
+const mongoose = require("mongoose")
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
@@ -30,6 +30,32 @@ exports.deleteProduct = async (req, res) => {
 };
 
 exports.getProductDetails = async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  res.json(product);
+  const { id } = req.params;
+
+  // ✅ Validate ObjectId before querying MongoDB
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid Product ID" });
+  }
+
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json(product);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    res.status(500).json({ message: "Error fetching product" });
+  }
+};
+
+
+exports.getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find(); // Fetch all products
+    res.json(products);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ message: "Error fetching products" });
+  }
 };
