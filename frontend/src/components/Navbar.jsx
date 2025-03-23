@@ -183,6 +183,7 @@ export default function Navbar() {
     }
   }, []);
 
+
   const toggleModal = () => {
     if (isOpen) {
       setImage(null);
@@ -203,6 +204,9 @@ export default function Navbar() {
     event.preventDefault();
     if (!image) return alert("Please select an image");
 
+    const token = localStorage.getItem("token"); // ✅ Get token from localStorage
+    if (!token) return alert("No authentication token found. Please log in.");
+
     const formData = new FormData();
     formData.append("image", image);
     formData.append("title", title);
@@ -216,7 +220,9 @@ export default function Navbar() {
         "http://localhost:5000/api/upload",
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${token}`,  // ✅ Send token in headers
+           },
         }
       );
 
@@ -237,7 +243,9 @@ export default function Navbar() {
         "http://localhost:5000/api/products/add",
         productData,
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,  // ✅ Send token in headers
+         },
         }
       );
 
