@@ -6,7 +6,8 @@ const ProductSchema = new mongoose.Schema({
     price: Number,
     stock: Number,
     image: String,
-    rank: Number  // ✅ Added rank field
+    rank: Number 
 });
 
 module.exports = mongoose.model('Product', ProductSchema);
+

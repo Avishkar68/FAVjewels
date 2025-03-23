@@ -17,9 +17,9 @@ app.use(cors());
 app.use(express.json());
 
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET,
   });
   
   const storage = new CloudinaryStorage({
@@ -49,7 +49,7 @@ app.post("/api/upload", upload.single("image"), async (req, res) => {
         console.log("Cloudinary Response:", uploadResponse);
 
         res.json({
-            message: "Image uploaded successfully",
+            // message: "Image uploaded successfully",
             imageUrl:uploadResponse.secure_url, 
         });
     } catch (error) {

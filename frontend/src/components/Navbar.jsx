@@ -204,24 +204,37 @@ export default function Navbar() {
     formData.append("description", description);
     formData.append("stock", stock);
     formData.append("price", price);
+    
 
     try {
-      console.log("Sending FormData:", [...formData]); // Debugging line
       console.log("Uploading image...");
-
-      const response = await axios.post("http://localhost:5000/api/upload", formData, {
+      const uploadResponse = await axios.post("http://localhost:5000/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
-    });
-
-    const imageUrl = response.data.imageUrl;
-    console.log("Image uploaded:", imageUrl);
-
-
+      });
+  
+      const image = uploadResponse.data.imageUrl;
+      console.log("Image uploaded:", image);
+  
+      // Now, send product data with the imageUrl to /api/products
+      const productData = {
+        name: title, // ✅ Send the correct field names matching backend schema
+        description,
+        price,
+        stock,
+        image, // ✅ Store Cloudinary URL
+        rank:1
+      };
+  
+      const productResponse = await axios.post("http://localhost:5000/api/products/add", productData, {
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      console.log("Product added:", productResponse.data);
       alert("Product uploaded successfully!");
-      console.log(response.data);
       toggleModal();
     } catch (error) {
       console.error("Upload failed", error);
+      alert("Error uploading product.");
     }
   };
 

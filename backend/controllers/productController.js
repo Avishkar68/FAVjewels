@@ -8,17 +8,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-exports.uploadMiddleware = upload.single("image");
+// exports.uploadMiddleware = upload.single("image");
 
 exports.addProduct = async (req, res) => {
-  const { name, description, price, stock, rank } = req.body;
+  const { name, description, price, stock, rank,image } = req.body;
   const product = await Product.create({
     name,
     description,
     price,
     stock,
     rank: rank || 1, // ✅ Set default rank to 1 if not provided
-    image: req.file ? req.file.path : null,
+    image
   });
 
   res.json(product);
