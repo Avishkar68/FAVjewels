@@ -164,7 +164,7 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaUser, FaShoppingBag, FaPlus } from "react-icons/fa";
+import { FaUser, FaShoppingBag, FaPlus, FaTimes, FaBars } from "react-icons/fa";
 import axios from "axios";
 
 export default function Navbar() {
@@ -182,7 +182,6 @@ export default function Navbar() {
       setUser(JSON.parse(storedUser));
     }
   }, []);
-
 
   const toggleModal = () => {
     if (isOpen) {
@@ -220,9 +219,10 @@ export default function Navbar() {
         "http://localhost:5000/api/upload",
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data",
-            "Authorization": `Bearer ${token}`,  // ✅ Send token in headers
-           },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`, // ✅ Send token in headers
+          },
         }
       );
 
@@ -243,9 +243,10 @@ export default function Navbar() {
         "http://localhost:5000/api/products/add",
         productData,
         {
-          headers: { "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,  // ✅ Send token in headers
-         },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // ✅ Send token in headers
+          },
         }
       );
 
@@ -258,10 +259,11 @@ export default function Navbar() {
     }
   };
 
+  const [isNav, setIsNav] = useState(false);
   return (
     <>
       {/* Navbar */}
-      <nav className="bg-white w-screen shadow-md py-4 px-10 flex items-center justify-between">
+      <nav className="bg-white w-screen shadow-md py-4 px-4 md:px-10 flex items-center justify-between">
         <div>
           <Link to="/" className="hover:text-gray-500">
             <span className="text-xl font-semibold text-gray-700">
@@ -270,7 +272,31 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <ul className="flex space-x-6 text-gray-700">
+        {/* <ul className="flex space-x-6 text-gray-700">
+          <li>
+            <Link to="/" className="hover:text-gray-500">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to="/collections" className="hover:text-gray-500">
+              Collections
+            </Link>
+          </li>
+          <li>
+            <Link to="/about" className="hover:text-gray-500">
+              About
+            </Link>
+          </li>
+          <li>
+            <Link to="/contact" className="hover:text-gray-500">
+              Contact
+            </Link>
+          </li>
+        </ul> */}
+
+        {/* Desktop Menu */}
+        <ul className="hidden md:flex space-x-6 text-gray-700">
           <li>
             <Link to="/" className="hover:text-gray-500">
               Home
@@ -293,16 +319,76 @@ export default function Navbar() {
           </li>
         </ul>
 
-        <div className="flex items-center space-x-6 text-gray-500">
+        {/* Mobile Menu */}
+        <div
+          className={`md:hidden fixed z-10 top-0 left-0 h-full w-screen bg-white shadow-lg transform transition-transform duration-300 ${
+            isNav ? "translate-x-0" : "-translate-x-full"
+          } md:hidden`}
+        >
+          {/* Close Button */}
+          <button
+            className="absolute top-4 right-4 text-gray-700 md:hidden"
+            onClick={() => setIsNav(false)}
+          >
+            <FaTimes size={24} />
+          </button>
+
+          {/* Sidebar Menu Items */}
+          <ul className="flex flex-col space-y-6 mt-16 text-gray-700 text-left pl-6">
+            <li>
+              <Link
+                to="/"
+                className="block p-2 hover:text-gray-500"
+                onClick={() => setIsNav(false)}
+              >
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/collections"
+                className="block p-2 hover:text-gray-500"
+                onClick={() => setIsNav(false)}
+              >
+                Collections
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/about"
+                className="block p-2 hover:text-gray-500"
+                onClick={() => setIsNav(false)}
+              >
+                About
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/contact"
+                className="block p-2 hover:text-gray-500"
+                onClick={() => setIsNav(false)}
+              >
+                Contact
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Overlay (Clicking outside closes menu) */}
+        {isNav && (
+          <div
+            className="fixed top-0 left-0 w-full h-full  bg-opacity-50 md:hidden "
+            onClick={() => setIsNav(false)}
+          ></div>
+        )}
+
+        <div className="flex items-center space-x-6 text-gray-500 md:mr-[-20px]">
           {user != null ? (
             <>
-              <Link
-                to="/login"
-                className="flex items-center space-x-1 cursor-pointer hover:text-gray-400"
-              >
+              <div className="flex items-center space-x-1 cursor-pointer hover:text-gray-400">
                 <FaUser />
                 <span>{user.name}</span>
-              </Link>
+              </div>
             </>
           ) : (
             <>
@@ -329,6 +415,13 @@ export default function Navbar() {
               <FaPlus size={20} />
             </div>
           )}
+          {/* Hamburger Icon (Only visible on mobile) */}
+          <button
+            className="md:hidden hover:text-gray-500"
+            onClick={() => setIsNav(!isNav)}
+          >
+            {isNav ? <FaTimes size={20} /> : <FaBars size={20} />}
+          </button>
         </div>
       </nav>
 
